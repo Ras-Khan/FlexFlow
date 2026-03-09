@@ -1,8 +1,10 @@
 @import './base.css';
 
 #app {
-  max-width: 1280px;
-  margin: 0 auto;
+  /* keep full-width layout for admin dashboard */
+  width: 100%;
+  max-width: none;
+  margin: 0;
   padding: 2rem;
   font-weight: normal;
 }
@@ -21,15 +23,14 @@ a,
   }
 }
 
+/* desktop media query removed – admin layout handles its own grid */
 @media (min-width: 1024px) {
   body {
-    display: flex;
-    place-items: center;
+    /* keep default flow */
   }
 
   #app {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    /* no special grid; admin sidebar controls layout */
     padding: 0 2rem;
   }
 }

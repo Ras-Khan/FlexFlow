@@ -1,1 +1,12 @@
-Testing initial commit
+This is a portfolio project to practise Vue and Laravel with again.
+
+
+Cheatsheet:
+
+-- Starting Vue --
+cd web-admin
+npm run dev
+
+-- Starting laravel --
+cd api-service
+php artisan serve
