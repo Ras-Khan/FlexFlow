@@ -56,20 +56,50 @@
         <p>No users found. Add new user</p>
       </div>
 
-      <div v-else class="users-grid">
-        <div v-for="user in users" :key="user.id" class="user-card">
-          <div class="user-header">
-            <h3>{{ user.name }}</h3>
-            <div class="user-actions">
-              <button @click="editUser(user)" class="btn-edit">Edit</button>
-              <button @click="deleteUser(user.id)" class="btn-delete">Delete</button>
+      <div v-else>
+        <div v-if="isDesktop" class="users-table-wrapper">
+          <table class="users-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Joined</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="user in users" :key="user.id">
+                <td class="link-cell" @click="router.push(`/users/${user.id}`)">{{ user.name }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ formatDate(user.created_at) }}</td>
+                <td>
+                  <span v-if="user.email_verified_at">Verified</span>
+                  <span v-else>Unverified</span>
+                </td>
+                <td>
+                  <button @click.stop="editUser(user)" class="btn-edit">Edit</button>
+                  <button @click.stop="deleteUser(user.id)" class="btn-delete">Delete</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div v-else class="users-grid">
+          <div v-for="user in users" :key="user.id" class="user-card" @click="router.push(`/users/${user.id}`)">
+            <div class="user-header">
+              <h3>{{ user.name }}</h3>
+              <div class="user-actions" @click.stop>
+                <button @click="editUser(user)" class="btn-edit">Edit</button>
+                <button @click="deleteUser(user.id)" class="btn-delete">Delete</button>
+              </div>
             </div>
-          </div>
 
-          <p class="user-email">{{ user.email }}</p>
-          <div class="user-date">Joined: {{ formatDate(user.created_at) }}</div>
-          <div v-if="user.email_verified_at" class="verified-badge">
-            Email Verified
+            <p class="user-email">{{ user.email }}</p>
+            <div class="user-date">Joined: {{ formatDate(user.created_at) }}</div>
+            <div v-if="user.email_verified_at" class="verified-badge">
+              Email Verified
+            </div>
           </div>
         </div>
       </div>
@@ -78,14 +108,29 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
+import { useRouter } from 'vue-router'
 import axios from 'axios'
 
+const router = useRouter()
 const users = ref([])
+const isDesktop = ref(window.innerWidth >= 1024)
 const showAddForm = ref(false)
 const isEditingUser = ref(false)
 const editingUserId = ref(null)
 const newUser = ref({ name: '', email: '', password: '' })
+
+function updateDesktop() {
+  isDesktop.value = window.innerWidth >= 1024
+}
+
+onMounted(() => {
+  window.addEventListener('resize', updateDesktop)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('resize', updateDesktop)
+})
 
 const fetchUsers = async () => {
   try {
@@ -164,23 +209,28 @@ onMounted(fetchUsers)
 <style scoped>
 .users-page {
   width: 100%;
-  padding: 0 20px;
+  padding: 0 30px;
   box-sizing: border-box;
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
 .page-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 30px;
+  margin-bottom: 40px;
   flex-wrap: wrap;
-  gap: 15px;
+  gap: 20px;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--glass-border);
 }
 
 .page-header h1 {
-  color: #2c3e50;
+  color: var(--color-heading);
   margin: 0;
-  font-size: 2rem;
+  font-size: 2.5rem;
+  font-weight: 600;
 }
 
 .btn-primary {
@@ -215,17 +265,19 @@ onMounted(fetchUsers)
 }
 
 .form-section {
-  background: white;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-backdrop);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
   padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  border-radius: 12px;
   margin-bottom: 30px;
 }
 
 .form-section h2 {
   margin-top: 0;
-  color: #2c3e50;
-  border-bottom: 2px solid #ecf0f1;
+  color: var(--color-heading);
+  border-bottom: 1px solid var(--glass-border);
   padding-bottom: 10px;
   font-size: 1.3rem;
 }
@@ -262,18 +314,96 @@ onMounted(fetchUsers)
 }
 
 .users-section {
-  background: white;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-backdrop);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  padding: 30px;
+  border-radius: 12px;
 }
 
 .users-section h2 {
   margin-top: 0;
-  color: #2c3e50;
-  border-bottom: 2px solid #ecf0f1;
-  padding-bottom: 10px;
-  font-size: 1.3rem;
+  color: var(--color-heading);
+  border-bottom: 1px solid var(--glass-border);
+  padding-bottom: 15px;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.users-table-wrapper {
+  overflow-x: auto;
+  margin-top: 20px;
+  border-radius: 16px;
+  backdrop-filter: var(--glass-backdrop);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+}
+
+.users-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: transparent;
+}
+
+.users-table th,
+.users-table td {
+  padding: 18px 20px;
+  text-align: left;
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.users-table th {
+  background: rgba(255, 255, 255, 0.05);
+  font-weight: 700;
+  color: var(--color-heading);
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  backdrop-filter: blur(5px);
+}
+
+.users-table tbody tr {
+  transition: all 0.3s ease;
+  backdrop-filter: blur(2px);
+}
+
+.users-table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.users-table tbody tr:nth-child(odd) {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.link-cell {
+  cursor: pointer;
+  color: #00d4ff;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  text-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
+}
+
+.link-cell:hover {
+  color: #00a8cc;
+  text-decoration: none;
+  text-shadow: 0 0 15px rgba(0, 212, 255, 0.5);
+}
+
+.users-table td:nth-child(2),
+.users-table td:nth-child(3),
+.users-table td:nth-child(4) {
+  color: var(--color-text);
+  font-size: 0.95rem;
+  opacity: 0.9;
+}
+
+.users-table td:last-child {
+  display: flex;
+  gap: 10px;
 }
 
 .empty-state {
@@ -284,22 +414,26 @@ onMounted(fetchUsers)
 
 .users-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  gap: 24px;
   margin-top: 20px;
 }
 
 .user-card {
-  border: 1px solid #ecf0f1;
-  border-radius: 8px;
-  padding: 20px;
-  background: #f8f9fa;
-  transition: box-shadow 0.3s, transform 0.2s ease;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-backdrop);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  border-radius: 12px;
+  padding: 24px;
+  transition: all 0.3s ease;
+  cursor: pointer;
 }
 
 .user-card:hover {
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
   transform: translateY(-2px);
+  box-shadow: var(--glass-shadow-hover);
+  background: var(--glass-bg-hover);
 }
 
 .user-header {
@@ -313,7 +447,7 @@ onMounted(fetchUsers)
 
 .user-header h3 {
   margin: 0;
-  color: #2c3e50;
+  color: var(--color-heading);
   flex: 1;
   font-size: 1.2rem;
 }
@@ -326,29 +460,38 @@ onMounted(fetchUsers)
 
 .btn-edit,
 .btn-delete {
-  padding: 5px 10px;
+  padding: 8px 14px;
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  text-transform: capitalize;
 }
 
 .btn-edit {
   background: #f39c12;
   color: white;
+  box-shadow: 0 2px 4px rgba(243, 156, 18, 0.3);
 }
 
 .btn-edit:hover {
   background: #e67e22;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(243, 156, 18, 0.4);
 }
 
 .btn-delete {
   background: #e74c3c;
   color: white;
+  box-shadow: 0 2px 4px rgba(231, 76, 60, 0.3);
 }
 
 .btn-delete:hover {
   background: #c0392b;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(231, 76, 60, 0.4);
 }
 
 .user-email {
@@ -376,12 +519,32 @@ onMounted(fetchUsers)
 /* Responsive styles */
 @media (max-width: 1024px) {
   .users-grid {
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 15px;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 18px;
   }
 
   .user-card {
-    padding: 15px;
+    padding: 20px;
+    border-radius: 10px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .users-grid {
+    grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
+    gap: 30px;
+  }
+
+  .user-card {
+    padding: 28px;
+  }
+
+  .user-header h3 {
+    font-size: 1.4rem;
+  }
+
+  .user-email {
+    font-size: 1rem;
   }
 }
 
@@ -394,10 +557,12 @@ onMounted(fetchUsers)
     flex-direction: column;
     align-items: stretch;
     gap: 15px;
+    margin-bottom: 30px;
+    padding: 15px 0;
   }
 
   .page-header h1 {
-    font-size: 1.5rem;
+    font-size: 1.8rem;
     text-align: center;
   }
 

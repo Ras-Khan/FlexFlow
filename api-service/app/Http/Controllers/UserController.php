@@ -10,6 +10,10 @@ class UserController extends Controller
         return \App\Models\User::all();
     }
 
+    public function show(\App\Models\User $user) {
+        return response()->json($user);
+    }
+
     public function store(Request $request) {
         $user = \App\Models\User::create($request->all());
         return response()->json($user, 201);

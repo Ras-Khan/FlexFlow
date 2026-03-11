@@ -40,7 +40,7 @@
       <div class="section">
         <h2>Recent Jobs</h2>
         <div class="jobs-list">
-          <div v-for="job in recentJobsList" :key="job.id" class="job-item">
+          <div v-for="job in recentJobsList" :key="job.id" class="job-item" @click="router.push(`/jobs/${job.id}`)">
             <h4>{{ job.title }}</h4>
             <p>{{ job.description }}</p>
             <span class="rate">€{{ job.hourly_rate }}/hr</span>
@@ -67,8 +67,10 @@
 
 <script setup>
 import { ref, onMounted, computed } from 'vue'
+import { useRouter } from 'vue-router'
 import axios from 'axios'
 
+const router = useRouter()
 const jobs = ref([])
 const users = ref([])
 
@@ -103,36 +105,44 @@ onMounted(fetchData)
 <style scoped>
 .dashboard {
   width: 100%;
-  padding: 0 20px;
+  padding: 0 30px;
   box-sizing: border-box;
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
 .dashboard h1 {
-  color: #2c3e50;
-  margin-bottom: 30px;
-  font-size: 2rem;
+  color: var(--color-heading);
+  margin-bottom: 40px;
+  font-size: 2.5rem;
+  font-weight: 600;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--glass-border);
 }
 
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 20px;
-  margin-bottom: 40px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 30px;
+  margin-bottom: 50px;
 }
 
 .stat-card {
-  background: white;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-backdrop);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  padding: 30px;
+  border-radius: 16px;
   display: flex;
   align-items: center;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: all 0.3s ease;
 }
 
 .stat-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  transform: translateY(-6px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+  background: rgba(255, 255, 255, 0.15);
 }
 
 .stat-icon {
@@ -144,13 +154,14 @@ onMounted(fetchData)
 .stat-content h3 {
   margin: 0;
   font-size: 2rem;
-  color: #2c3e50;
+  color: var(--color-heading);
 }
 
 .stat-content p {
   margin: 5px 0 0 0;
-  color: #7f8c8d;
+  color: var(--color-text);
   font-size: 0.9rem;
+  opacity: 0.8;
 }
 
 .dashboard-sections {
@@ -160,18 +171,21 @@ onMounted(fetchData)
 }
 
 .section {
-  background: white;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-backdrop);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  padding: 30px;
+  border-radius: 16px;
 }
 
 .section h2 {
   margin-top: 0;
-  color: #2c3e50;
-  border-bottom: 2px solid #ecf0f1;
-  padding-bottom: 10px;
-  font-size: 1.3rem;
+  color: var(--color-heading);
+  border-bottom: 1px solid var(--glass-border);
+  padding-bottom: 15px;
+  font-size: 1.5rem;
+  font-weight: 600;
 }
 
 .jobs-list {
@@ -179,35 +193,44 @@ onMounted(fetchData)
 }
 
 .job-item {
-  padding: 15px 0;
-  border-bottom: 1px solid #ecf0f1;
-  transition: background 0.2s ease;
+  padding: 15px;
+  margin-bottom: 10px;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  border: var(--glass-border);
+  border-radius: 12px;
+  box-shadow: var(--glass-shadow);
+  transition: all 0.3s ease;
+  cursor: pointer;
 }
 
 .job-item:hover {
-  background: #f8f9fa;
+  transform: translateY(-2px);
+  box-shadow: var(--glass-shadow-hover);
+  background: var(--glass-bg-hover);
 }
 
 .job-item:last-child {
-  border-bottom: none;
+  margin-bottom: 0;
 }
 
 .job-item h4 {
   margin: 0 0 5px 0;
-  color: #2c3e50;
+  color: var(--color-heading);
   font-size: 1.1rem;
 }
 
 .job-item p {
   margin: 0 0 5px 0;
-  color: #7f8c8d;
+  color: var(--color-text);
   font-size: 0.9rem;
   line-height: 1.4;
+  opacity: 0.9;
 }
 
 .rate {
   font-weight: bold;
-  color: #27ae60;
+  color: var(--color-success);
   font-size: 0.95rem;
 }
 
@@ -220,16 +243,20 @@ onMounted(fetchData)
   display: flex;
   align-items: center;
   padding: 15px;
-  background: #f8f9fa;
-  border-radius: 6px;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-backdrop);
+  border: 1px solid var(--glass-border);
+  border-radius: 8px;
   text-decoration: none;
-  color: #2c3e50;
-  transition: background 0.3s, transform 0.2s ease;
+  color: var(--color-heading);
+  transition: all 0.3s ease;
+  box-shadow: var(--glass-shadow);
 }
 
 .action-card:hover {
-  background: #e9ecef;
-  transform: translateY(-1px);
+  background: var(--glass-bg-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--glass-shadow-hover);
 }
 
 .action-icon {
@@ -265,24 +292,19 @@ onMounted(fetchData)
   }
 
   .dashboard h1 {
-    font-size: 1.5rem;
-    margin-bottom: 20px;
+    font-size: 1.8rem;
+    margin-bottom: 30px;
+    padding: 15px 0;
   }
 
   .stats-grid {
     grid-template-columns: 1fr;
-    gap: 15px;
-    margin-bottom: 30px;
+    gap: 20px;
+    margin-bottom: 40px;
   }
 
   .stat-card {
-    padding: 15px;
-    justify-content: flex-start;
-  }
-
-  .stat-icon {
-    font-size: 1.8rem;
-    margin-right: 12px;
+    padding: 20px;
   }
 
   .stat-content h3 {
@@ -290,15 +312,15 @@ onMounted(fetchData)
   }
 
   .dashboard-sections {
-    gap: 15px;
+    gap: 20px;
   }
 
   .section {
-    padding: 15px;
+    padding: 20px;
   }
 
   .section h2 {
-    font-size: 1.1rem;
+    font-size: 1.2rem;
   }
 
   .job-item {

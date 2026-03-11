@@ -6,8 +6,20 @@ use Illuminate\Http\Request;
 
 class JobController extends Controller
 {
-    public function index() {
-        return \App\Models\Job::all();
+    public function index(Request $request) {
+        $query = \App\Models\Job::query();
+        $user = $request->user();
+
+        // if not authenticated we should never hit this route now, but be defensive
+        if ($user && $user->role === 'client') {
+            $query->where('client_id', $user->id);
+        }
+
+        return $query->get();
+    }
+
+    public function show(\App\Models\Job $job) {
+        return response()->json($job);
     }
 
     public function store(Request $request) {
