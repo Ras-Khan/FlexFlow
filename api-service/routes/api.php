@@ -4,6 +4,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\JobController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\PayrollController;
+use App\Http\Controllers\PaystubController;
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/jobs', [JobController::class, 'index']);
@@ -63,6 +66,37 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::put('/assignments/{assignment}', [\App\Http\Controllers\AssignmentController::class, 'update']);
         Route::delete('/assignments/{assignment}', [\App\Http\Controllers\AssignmentController::class, 'destroy']);
     });
+
+    // company management
+    Route::middleware([\App\Http\Middleware\EnsureRole::class . ':admin'])->group(function () {
+        Route::get('/companies', [CompanyController::class, 'index']);
+        Route::get('/companies/{company}', [CompanyController::class, 'show']);
+        Route::post('/companies', [CompanyController::class, 'store']);
+        Route::put('/companies/{company}', [CompanyController::class, 'update']);
+        Route::delete('/companies/{company}', [CompanyController::class, 'destroy']);
+    });
+
+    // payroll management
+    Route::middleware([\App\Http\Middleware\EnsureRole::class . ':admin'])->group(function () {
+        Route::get('/payrolls', [PayrollController::class, 'index']);
+        Route::get('/payrolls/{payroll}', [PayrollController::class, 'show']);
+        Route::post('/payrolls', [PayrollController::class, 'store']);
+        Route::put('/payrolls/{payroll}', [PayrollController::class, 'update']);
+        Route::delete('/payrolls/{payroll}', [PayrollController::class, 'destroy']);
+    });
+
+    // paystub management
+    Route::middleware([\App\Http\Middleware\EnsureRole::class . ':admin'])->group(function () {
+        Route::get('/paystubs', [PaystubController::class, 'index']);
+        Route::get('/paystubs/{paystub}', [PaystubController::class, 'show']);
+        Route::post('/paystubs', [PaystubController::class, 'store']);
+        Route::put('/paystubs/{paystub}', [PaystubController::class, 'update']);
+        Route::delete('/paystubs/{paystub}', [PaystubController::class, 'destroy']);
+    });
+
+    // user profile management
+    Route::get('/profile', [UserController::class, 'getProfile']);
+    Route::put('/profile', [UserController::class, 'updateProfile']);
 });
 
 Route::post('/login', [\App\Http\Controllers\AuthController::class, 'login']);

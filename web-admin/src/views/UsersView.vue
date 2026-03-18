@@ -137,7 +137,7 @@ const fetchUsers = async () => {
     const response = await axios.get('http://localhost:8000/api/users')
     users.value = response.data
   } catch (error) {
-    alert("Error fetching users")
+    alert("Error loading users")
   }
 }
 

@@ -28,4 +28,27 @@ class UserController extends Controller
         $user->delete();
         return response()->json(null, 204);
     }
+
+    public function getProfile(Request $request)
+    {
+        return response()->json($request->user());
+    }
+
+    public function updateProfile(Request $request)
+    {
+        $user = $request->user();
+        
+        $validated = $request->validate([
+            'name' => 'sometimes|required|string|max:255',
+            'email' => 'sometimes|required|email|unique:users,email,' . $user->id,
+            'password' => 'sometimes|required|string|min:8',
+        ]);
+
+        if (isset($validated['password'])) {
+            $validated['password'] = bcrypt($validated['password']);
+        }
+
+        $user->update($validated);
+        return response()->json($user);
+    }
 }

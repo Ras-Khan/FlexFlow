@@ -24,13 +24,13 @@
         </li>
         <li v-if="user.role === 'admin'">
           <router-link to="/invoicing" class="sidebar-link" @click="closeMobileMenu">
-            <span class="icon">$</span>
+            <span class="icon">I</span>
             Invoicing
           </router-link>
         </li>
         <li v-if="user.role === 'admin'">
           <router-link to="/analytics" class="sidebar-link" @click="closeMobileMenu">
-            <span class="icon">📊</span>
+            <span class="icon">A</span>
             Analytics
           </router-link>
         </li>
@@ -42,7 +42,7 @@
         </li>
         <li v-if="user.role === 'admin'">
           <router-link to="/assignments" class="sidebar-link" @click="closeMobileMenu">
-            <span class="icon">A</span>
+            <span class="icon">S</span>
             Assignments
           </router-link>
         </li>
@@ -50,6 +50,36 @@
           <router-link to="/users" class="sidebar-link" @click="closeMobileMenu">
             <span class="icon">U</span>
             Users
+          </router-link>
+        </li>
+        <li v-if="user.role === 'admin'">
+          <router-link to="/companies" class="sidebar-link" @click="closeMobileMenu">
+            <span class="icon">C</span>
+            Companies
+          </router-link>
+        </li>
+        <li v-if="user.role === 'admin'">
+          <router-link to="/skills" class="sidebar-link" @click="closeMobileMenu">
+            <span class="icon">K</span>
+            Skills
+          </router-link>
+        </li>
+        <li v-if="user.role === 'admin'">
+          <router-link to="/availability" class="sidebar-link" @click="closeMobileMenu">
+            <span class="icon">V</span>
+            Availability
+          </router-link>
+        </li>
+        <li v-if="user.role === 'admin'">
+          <router-link to="/payroll" class="sidebar-link" @click="closeMobileMenu">
+            <span class="icon">P</span>
+            Payroll
+          </router-link>
+        </li>
+        <li>
+          <router-link to="/profile" class="sidebar-link" @click="closeMobileMenu">
+            <span class="icon">R</span>
+            Profile
           </router-link>
         </li>
       </ul>

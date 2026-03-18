@@ -25,12 +25,12 @@ class AssignmentController extends Controller
             }
         }
 
-        return $query->get();
+        return $query->with(['job', 'worker'])->get();
     }
 
     public function show(Assignment $assignment)
     {
-        return $assignment;
+        return $assignment->load(['job', 'worker']);
     }
 
     public function store(Request $request)

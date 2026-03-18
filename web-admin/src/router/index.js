@@ -2,6 +2,11 @@ import { createRouter, createWebHistory } from 'vue-router'
 import DashboardView from '../views/DashboardView.vue'
 import JobsView from '../views/JobsView.vue'
 import UsersView from '../views/UsersView.vue'
+import CompaniesView from '../views/CompaniesView.vue'
+import PayrollView from '../views/PayrollView.vue'
+import SkillsView from '../views/SkillsView.vue'
+import WorkerAvailabilityView from '../views/WorkerAvailabilityView.vue'
+import ProfileView from '../views/ProfileView.vue'
 import JobDetailView from '../views/JobDetailView.vue'
 import UserDetailView from '../views/UserDetailView.vue'
 import TimeRegistration from '../views/TimeRegistration.vue'
@@ -64,6 +69,36 @@ const router = createRouter({
       path: '/users',
       name: 'users',
       component: UsersView,
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/companies',
+      name: 'companies',
+      component: CompaniesView,
+      meta: { requiresAuth: true, roles: ['admin'] }
+    },
+    {
+      path: '/payroll',
+      name: 'payroll',
+      component: PayrollView,
+      meta: { requiresAuth: true, roles: ['admin'] }
+    },
+    {
+      path: '/skills',
+      name: 'skills',
+      component: SkillsView,
+      meta: { requiresAuth: true, roles: ['admin'] }
+    },
+    {
+      path: '/availability',
+      name: 'availability',
+      component: WorkerAvailabilityView,
+      meta: { requiresAuth: true, roles: ['admin'] }
+    },
+    {
+      path: '/profile',
+      name: 'profile',
+      component: ProfileView,
       meta: { requiresAuth: true }
     },
     {

@@ -1,6 +1,5 @@
 This is a portfolio project to practise Vue and Laravel with again.
 
-
 Cheatsheet:
 
 -- Starting Vue --
